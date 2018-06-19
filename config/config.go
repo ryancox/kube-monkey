@@ -47,6 +47,9 @@ func SetDefaults() {
 	viper.SetDefault(param.GracePeriodSec, 5)
 	viper.SetDefault(param.BlacklistedNamespaces, []string{metav1.NamespaceSystem})
 	viper.SetDefault(param.WhitelistedNamespaces, []string{metav1.NamespaceAll})
+	viper.SetDefault(param.MetricServerEnabled, true)
+	viper.SetDefault(param.MetricServerPath, "/metrics")
+	viper.SetDefault(param.MetricServerPort, 8025)
 
 	viper.SetDefault(param.DebugEnabled, false)
 	viper.SetDefault(param.DebugScheduleDelay, 30)
@@ -139,6 +142,22 @@ func ClusterAPIServerHost() (string, bool) {
 		return viper.GetString(param.ClusterAPIServerHost), true
 	}
 	return "", false
+}
+
+func MetricServerEnabled() bool {
+	return viper.GetBool(param.MetricServerEnabled)
+}
+
+func MetricServerPath() string {
+	return viper.GetString(param.MetricServerPath)
+}
+
+func MetricServerAddress() string {
+	return viper.GetString(param.MetricServerAddress)
+}
+
+func MetricServerPort() int {
+	return viper.GetInt(param.MetricServerPort)
 }
 
 func DebugEnabled() bool {

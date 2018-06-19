@@ -3,9 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/golang/glog"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/asobti/kube-monkey/config"
 	"github.com/asobti/kube-monkey/kubemonkey"
@@ -38,6 +40,22 @@ func initLogging() {
 	}
 }
 
+func initMetricServer() {
+	if !config.MetricServerEnabled() {
+		glog.V(1).Infof("Metric server disabled")
+		return
+	}
+
+	go func() {
+		metricsServer := http.NewServeMux()
+		metricsServer.Handle(config.MetricServerPath(), promhttp.Handler())
+		glog.V(1).Infof("Starting metric server at address [%s]", config.MetricServerPort())
+		if err := http.ListenAndServe(config.MetricServerAddress(), metricsServer); err != nil {
+			glog.Fatalf("Failed to start metric server at [%s]: %v", config.MetricServerPort(), err)
+		}
+	}()
+}
+
 func initConfig() {
 	if err := config.Init(); err != nil {
 		glog.Fatal(err.Error())
@@ -50,6 +68,9 @@ func main() {
 
 	// Initialize configs
 	initConfig()
+
+	// Initialize metric server
+	initMetricServer()
 
 	glog.V(1).Infof("Starting kube-monkey with v logging level %v and local log directory %s", flag.Lookup("v").Value, flag.Lookup("log_dir").Value)
 

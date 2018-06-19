@@ -71,6 +71,26 @@ const (
 	// by in-cluster config is used
 	ClusterAPIServerHost = "kubernetes.host"
 
+	// Prometheus metrics server enable/disable
+	// Type: bool
+	// Default: true
+	MetricServerEnabled = "kubernetes.metrics_enabled"
+
+	// Prometheus metrics server endpoint path
+	// Type: string
+	// Default: /metrics
+	MetricServerPath = "kubernetes.metrics_path"
+
+	// Prometheus metrics server address
+	// Type: string
+	// Default: 0
+	MetricServerAddress = "kubernetes.metrics_address"
+
+	// Prometheus metrics server port
+	// Type: int
+	// Default: 8025
+	MetricServerPort = "kubernetes.metrics_port"
+
 	// DebugEnabled enables debug mode
 	// Type: bool
 	// Default: false
